@@ -45,4 +45,18 @@ export class AuthController {
       next(error);
     }
   }
+  async me(req: Request, res: Response): Promise<void> {
+    res.status(200).json({
+      success: true,
+      data: {
+        id: req.user!.id,
+        firstName: req.user!.firstName,
+        lastName: req.user!.lastName,
+        email: req.user!.email,
+        phone: req.user!.phone,
+        role: req.user!.role,
+        isEmailVerified: req.user!.isEmailVerified,
+      },
+    });
+  }
 }

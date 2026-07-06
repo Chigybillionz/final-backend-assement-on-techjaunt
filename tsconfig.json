@@ -2,6 +2,8 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
     "rootDir": "./src",
     "outDir": "./dist",
 
@@ -11,15 +13,14 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
 
-    "moduleResolution": "NodeNext",
-
     "resolveJsonModule": true,
 
     "skipLibCheck": true,
-
     "forceConsistentCasingInFileNames": true,
 
-    "sourceMap": true
+    "sourceMap": true,
+
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
 
   "include": ["src/**/*.ts"],
