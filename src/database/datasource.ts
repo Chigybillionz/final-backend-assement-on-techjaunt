@@ -21,9 +21,9 @@ export const AppDataSource = new DataSource({
 
   logging: env.nodeEnv === "development",
 
-  entities: ["src/entities/**/*.ts"],
+  entities: [__dirname + "/../entities/*.{ts,js}"],
 
-  migrations: ["src/database/migrations/**/*.ts"],
+  migrations: [__dirname + "/migrations/*.{ts,js}"],
 
-  subscribers: ["src/subscribers/**/*.ts"],
+  subscribers: [__dirname + "/../subscribers/*.{ts,js}"],
 });
