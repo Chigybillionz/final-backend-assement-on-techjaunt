@@ -4,6 +4,8 @@ import { AuthController } from "../controllers/auth.controller";
 
 import { validateDto } from "../../../middlewares/validate.middleware";
 import { authenticate } from "../../../middlewares/auth.middleware";
+import { authorize } from "../../../middlewares/authorize.middleware";
+import { UserRole } from "../../../enums/user-role.enum";
 
 import { RegisterUserDto } from "../dto/register-user.dto";
 import { LoginUserDto } from "../dto/login-user.dto";
