@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { AuthRepository } from "../repositories/auth.repository";
 import { RegisterUserDto } from "../dto/register-user.dto";
 import { User } from "../../../entities/User.entity";
+import { ConflictError } from "../../../utils/errors/ConflictError";
 
 export class AuthService {
   private readonly authRepository = new AuthRepository();
@@ -11,7 +12,7 @@ export class AuthService {
     const existingUser = await this.authRepository.findByEmail(data.email);
 
     if (existingUser) {
-      throw new Error("Email already exists");
+      throw new ConflictError("Email already exists");
     }
 
     const hashedPassword = await bcrypt.hash(data.password, 12);

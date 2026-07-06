@@ -9,6 +9,7 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 
 import morgan from "morgan";
+import { errorHandler } from "./middlewares/error.middleware";
 
 const app = express();
 
@@ -47,5 +48,6 @@ app.get("/health", (_req, res) => {
     timestamp: new Date(),
   });
 });
+app.use(errorHandler);
 
 export default app;
