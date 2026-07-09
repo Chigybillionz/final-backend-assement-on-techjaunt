@@ -5,6 +5,7 @@ import { env } from "./config/env";
 import logger from "./config/logger";
 
 import { AppDataSource } from "./database/datasource";
+console.log("JWT Secret:", env.jwt.secret);
 
 async function startServer() {
   try {

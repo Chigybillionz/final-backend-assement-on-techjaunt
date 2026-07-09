@@ -7,7 +7,9 @@ import { User } from "../entities/User.entity";
 import { UnauthorizedError } from "../utils/errors/UnauthorizedError";
 
 interface JwtPayload {
-  sub: string;
+  id: string;
+  email: string;
+  role: string;
 }
 
 export const authenticate = async (
@@ -30,7 +32,7 @@ export const authenticate = async (
 
     const user = await userRepository.findOne({
       where: {
-        id: payload.sub,
+        id: payload.id,
       },
     });
 

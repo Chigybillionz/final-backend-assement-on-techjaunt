@@ -1,10 +1,15 @@
-import { Entity, Column } from "typeorm";
+import { Entity, Column, OneToMany } from "typeorm";
 
 import { AppBaseEntity } from "./AppBaseEntity";
+import { Booking } from "./Booking.entity";
 import { UserRole } from "../enums/user-role.enum";
 
 @Entity("users")
 export class User extends AppBaseEntity {
+  // Relationships
+  @OneToMany(() => Booking, (booking) => booking.customer)
+  bookings!: Booking[];
+
   @Column({
     length: 100,
   })
