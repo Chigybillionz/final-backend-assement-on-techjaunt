@@ -8,6 +8,7 @@ import morgan from "morgan";
 import authRoutes from "./modules/auth/routes/auth.routes";
 import { errorHandler } from "./middlewares/error.middleware";
 import vehicleRoutes from "./modules/vehicles/routes/vehicle.routes";
+import bookingRoutes from "./modules/bookings/routes/booking.routes";
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.get("/health", (_req, res) => {
 app.use("/api/v1/auth", authRoutes);
 
 app.use("/api/v1/vehicles", vehicleRoutes);
+app.use("/api/v1/bookings", bookingRoutes);
 
 // Global Error Handler (always last)
 app.use(errorHandler);
