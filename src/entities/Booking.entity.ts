@@ -3,6 +3,8 @@ import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
 import { AppBaseEntity } from "./AppBaseEntity";
 import { User } from "./User.entity";
 import { Vehicle } from "./Vehicle.entity";
+import { OneToOne } from "typeorm";
+import { Payment } from "./Payment.entity";
 
 @Entity("bookings")
 export class Booking extends AppBaseEntity {
@@ -17,6 +19,8 @@ export class Booking extends AppBaseEntity {
     name: "vehicleId",
   })
   vehicle!: Vehicle;
+  @OneToOne(() => Payment, (payment) => payment.booking)
+  payment?: Payment;
 
   @Column({
     type: "date",
