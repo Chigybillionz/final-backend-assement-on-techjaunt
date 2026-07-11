@@ -9,6 +9,7 @@ import authRoutes from "./modules/auth/routes/auth.routes";
 import { errorHandler } from "./middlewares/error.middleware";
 import vehicleRoutes from "./modules/vehicles/routes/vehicle.routes";
 import bookingRoutes from "./modules/bookings/routes/booking.routes";
+import paymentRoutes from "./modules/payments/routes/payment.routes";
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use("/api/v1/auth", authRoutes);
 
 app.use("/api/v1/vehicles", vehicleRoutes);
 app.use("/api/v1/bookings", bookingRoutes);
+app.use("/api/v1/payments", paymentRoutes);
 
 // Global Error Handler (always last)
 app.use(errorHandler);

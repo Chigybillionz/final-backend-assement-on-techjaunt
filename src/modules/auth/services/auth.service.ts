@@ -5,17 +5,20 @@ import { AuthRepository } from "../repositories/auth.repository";
 import { RegisterUserDto } from "../dto/register-user.dto";
 import { LoginUserDto } from "../dto/login-user.dto";
 
-import { User } from "../../../entities/User.entity";
-
 import { ConflictError } from "../../../utils/errors/ConflictError";
 import { UnauthorizedError } from "../../../utils/errors/UnauthorizedError";
+
+import { UserResponse } from "../responses/user.response";
 
 import { generateAccessToken, generateRefreshToken } from "../../../utils/jwt";
 
 export class AuthService {
   private readonly authRepository = new AuthRepository();
 
-  async register(data: RegisterUserDto): Promise<User> {
+  /**
+   * Register User
+   */
+  async register(data: RegisterUserDto): Promise<UserResponse> {
     const existingUser = await this.authRepository.findByEmail(data.email);
 
     if (existingUser) {
@@ -29,10 +32,17 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    return user;
+    return new UserResponse(user);
   }
 
-  async login(data: LoginUserDto) {
+  /**
+   * Login User
+   */
+  async login(data: LoginUserDto): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    user: UserResponse;
+  }> {
     const user = await this.authRepository.findByEmail(data.email);
 
     if (!user) {
@@ -52,7 +62,6 @@ export class AuthService {
     };
 
     const accessToken = generateAccessToken(payload);
-
     const refreshToken = generateRefreshToken(payload);
 
     user.refreshToken = refreshToken;
@@ -62,14 +71,7 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
-      user: {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        role: user.role,
-        isEmailVerified: user.isEmailVerified,
-      },
+      user: new UserResponse(user),
     };
   }
 }
