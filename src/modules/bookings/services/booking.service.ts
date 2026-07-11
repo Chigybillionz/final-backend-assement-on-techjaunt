@@ -9,6 +9,8 @@ import { User } from "../../../entities/User.entity";
 import { NotFoundError } from "../../../utils/errors/NotFoundError";
 import { ForbiddenError } from "../../../utils/errors/ForbiddenError";
 import { ConflictError } from "../../../utils/errors/ConflictError";
+import { BookingStatus } from "../../../enums/booking-status.enum";
+import { PaymentStatus } from "../../../enums/payment-status.enum";
 
 export class BookingService {
   private readonly bookingRepository = new BookingRepository();
@@ -66,10 +68,9 @@ export class BookingService {
       pickupDate,
       returnDate,
       totalPrice,
-      status: "pending",
-      paymentStatus: "pending",
+      status: BookingStatus.PENDING,
+      paymentStatus: PaymentStatus.PENDING,
     });
-
     return booking;
   }
 

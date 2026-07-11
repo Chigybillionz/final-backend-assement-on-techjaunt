@@ -10,6 +10,10 @@ import { paystack } from "../../../utils/paystack";
 import { NotFoundError } from "../../../utils/errors/NotFoundError";
 import { ConflictError } from "../../../utils/errors/ConflictError";
 
+import { BookingStatus } from "../../../enums/booking-status.enum";
+import { PaymentStatus } from "../../../enums/payment-status.enum";
+import { PaymentGateway } from "../../../enums/payment-gateway.enum";
+
 export class PaymentService {
   private readonly paymentRepository = new PaymentRepository();
 
@@ -22,7 +26,7 @@ export class PaymentService {
       throw new NotFoundError("Booking not found");
     }
 
-    if (booking.paymentStatus === "paid") {
+    if (booking.paymentStatus === PaymentStatus.SUCCESS) {
       throw new ConflictError("Booking has already been paid");
     }
 
@@ -32,8 +36,8 @@ export class PaymentService {
       booking,
       amount: booking.totalPrice,
       reference,
-      status: "pending",
-      gateway: "paystack",
+      status: PaymentStatus.PENDING,
+      gateway: PaymentGateway.PAYSTACK,
     });
 
     const response = await paystack.post("/transaction/initialize", {
@@ -52,6 +56,7 @@ export class PaymentService {
       reference,
     };
   }
+
   async verify(reference: string) {
     const payment = await this.paymentRepository.findByReference(reference);
 
@@ -72,7 +77,7 @@ export class PaymentService {
     }
 
     const updatedPayment = await this.paymentRepository.update(payment.id, {
-      status: "success",
+      status: PaymentStatus.SUCCESS,
     });
 
     if (!updatedPayment) {
@@ -80,8 +85,8 @@ export class PaymentService {
     }
 
     await this.bookingRepository.update(payment.booking.id, {
-      paymentStatus: "paid",
-      status: "confirmed",
+      paymentStatus: PaymentStatus.SUCCESS,
+      status: BookingStatus.CONFIRMED,
     });
 
     return updatedPayment;

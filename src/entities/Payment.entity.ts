@@ -3,6 +3,9 @@ import { Entity, Column, OneToOne, JoinColumn } from "typeorm";
 import { AppBaseEntity } from "./AppBaseEntity";
 import { Booking } from "./Booking.entity";
 
+import { PaymentStatus } from "../enums/payment-status.enum";
+import { PaymentGateway } from "../enums/payment-gateway.enum";
+
 @Entity("payments")
 export class Payment extends AppBaseEntity {
   @OneToOne(() => Booking)
@@ -22,14 +25,18 @@ export class Payment extends AppBaseEntity {
   amount!: number;
 
   @Column({
-    default: "pending",
+    type: "enum",
+    enum: PaymentStatus,
+    default: PaymentStatus.PENDING,
   })
-  status!: string;
+  status!: PaymentStatus;
 
   @Column({
-    default: "paystack",
+    type: "enum",
+    enum: PaymentGateway,
+    default: PaymentGateway.PAYSTACK,
   })
-  gateway!: string;
+  gateway!: PaymentGateway;
 
   @Column({
     type: "timestamp",

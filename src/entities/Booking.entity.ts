@@ -5,6 +5,8 @@ import { User } from "./User.entity";
 import { Vehicle } from "./Vehicle.entity";
 import { OneToOne } from "typeorm";
 import { Payment } from "./Payment.entity";
+import { BookingStatus } from "../enums/booking-status.enum";
+import { PaymentStatus } from "../enums/payment-status.enum";
 
 @Entity("bookings")
 export class Booking extends AppBaseEntity {
@@ -36,14 +38,16 @@ export class Booking extends AppBaseEntity {
     type: "decimal",
   })
   totalPrice!: number;
-
   @Column({
-    default: "pending",
+    type: "enum",
+    enum: BookingStatus,
+    default: BookingStatus.PENDING,
   })
-  status!: string;
-
+  status!: BookingStatus;
   @Column({
-    default: "pending",
+    type: "enum",
+    enum: PaymentStatus,
+    default: PaymentStatus.PENDING,
   })
-  paymentStatus!: string;
+  paymentStatus!: PaymentStatus;
 }
