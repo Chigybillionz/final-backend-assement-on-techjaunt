@@ -8,7 +8,7 @@ import { User } from "../../../entities/User.entity";
 
 import { NotFoundError } from "../../../utils/errors/NotFoundError";
 import { ForbiddenError } from "../../../utils/errors/ForbiddenError";
-
+import { QueryVehicleDto } from "../dto/query-vehicle.dto";
 export class VehicleService {
   private readonly vehicleRepository = new VehicleRepository();
 
@@ -18,9 +18,8 @@ export class VehicleService {
       owner,
     });
   }
-
-  async findAll(): Promise<Vehicle[]> {
-    return this.vehicleRepository.findAll();
+  async findAll(query: QueryVehicleDto) {
+    return this.vehicleRepository.findWithFilters(query);
   }
 
   async findById(id: string): Promise<Vehicle> {

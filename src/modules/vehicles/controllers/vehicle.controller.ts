@@ -6,7 +6,7 @@ import { CreateVehicleDto } from "../dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "../dto/update-vehicle.dto";
 
 import { VehicleResponse } from "../responses/vehicle.response";
-
+import { QueryVehicleDto } from "../dto/query-vehicle.dto";
 export class VehicleController {
   private readonly vehicleService = new VehicleService();
 
@@ -28,22 +28,31 @@ export class VehicleController {
   }
 
   async findAll(
-    _req: Request,
+    req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> {
     try {
-      const vehicles = await this.vehicleService.findAll();
+      const result = await this.vehicleService.findAll(
+        req.query as unknown as QueryVehicleDto,
+      );
 
       res.status(200).json({
         success: true,
-        data: vehicles.map((vehicle) => new VehicleResponse(vehicle)),
+        data: {
+          items: result.items.map((vehicle) => new VehicleResponse(vehicle)),
+          pagination: {
+            page: result.page,
+            limit: result.limit,
+            total: result.total,
+            totalPages: result.totalPages,
+          },
+        },
       });
     } catch (error) {
       next(error);
     }
   }
-
   async findById(
     req: Request,
     res: Response,
