@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { BookingService } from "../services/booking.service";
 
 import { CreateBookingDto } from "../dto/create-booking.dto";
+import { BookingResponse } from "../responses/booking.response";
 
 export class BookingController {
   private readonly bookingService = new BookingService();
@@ -17,7 +18,7 @@ export class BookingController {
       res.status(201).json({
         success: true,
         message: "Booking created successfully",
-        data: booking,
+        data: new BookingResponse(booking),
       });
     } catch (error) {
       next(error);
@@ -34,7 +35,7 @@ export class BookingController {
 
       res.status(200).json({
         success: true,
-        data: bookings,
+        data: bookings.map((booking) => new BookingResponse(booking)),
       });
     } catch (error) {
       next(error);
@@ -51,7 +52,7 @@ export class BookingController {
 
       res.status(200).json({
         success: true,
-        data: booking,
+        data: new BookingResponse(booking),
       });
     } catch (error) {
       next(error);

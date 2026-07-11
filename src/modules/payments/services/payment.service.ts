@@ -75,6 +75,10 @@ export class PaymentService {
       status: "success",
     });
 
+    if (!updatedPayment) {
+      throw new NotFoundError("Payment not found after update");
+    }
+
     await this.bookingRepository.update(payment.booking.id, {
       paymentStatus: "paid",
       status: "confirmed",

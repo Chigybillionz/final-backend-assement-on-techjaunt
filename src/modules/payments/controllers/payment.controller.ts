@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 import { PaymentService } from "../services/payment.service";
 import { InitializePaymentDto } from "../dto/initialize-payment.dto";
+import { PaymentResponse } from "../responses/payment.response";
 
 export class PaymentController {
   private readonly paymentService = new PaymentService();
@@ -19,7 +20,10 @@ export class PaymentController {
       res.status(200).json({
         success: true,
         message: "Payment initialized successfully",
-        data: result,
+        data: {
+          ...result,
+          payment: new PaymentResponse(result.payment),
+        },
       });
     } catch (error) {
       next(error);
@@ -33,7 +37,7 @@ export class PaymentController {
       res.status(200).json({
         success: true,
         message: "Payment verified successfully",
-        data: payment,
+        data: new PaymentResponse(payment),
       });
     } catch (error) {
       next(error);
