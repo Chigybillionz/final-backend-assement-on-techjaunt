@@ -10,7 +10,7 @@ import { UserRole } from "../../../enums/user-role.enum";
 
 import { CreateVehicleDto } from "../dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "../dto/update-vehicle.dto";
-
+import { upload } from "../../../middlewares/upload.middleware";
 const router = Router();
 
 const vehicleController = new VehicleController();
@@ -26,13 +26,18 @@ router.post(
   validateDto(CreateVehicleDto),
   vehicleController.create.bind(vehicleController),
 );
-
 router.patch(
-  "/:id",
+  "/:id/image",
   authenticate,
   authorize(UserRole.OWNER),
-  validateDto(UpdateVehicleDto),
-  vehicleController.update.bind(vehicleController),
+  upload.single("image"),
+  vehicleController.uploadImage.bind(vehicleController),
+);
+router.patch(
+  "/:id/image",
+  authenticate,
+  upload.single("image"),
+  vehicleController.uploadImage.bind(vehicleController),
 );
 
 router.delete(

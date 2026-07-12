@@ -7,6 +7,7 @@ import { UpdateVehicleDto } from "../dto/update-vehicle.dto";
 
 import { VehicleResponse } from "../responses/vehicle.response";
 import { QueryVehicleDto } from "../dto/query-vehicle.dto";
+import { upload } from "../../../middlewares/upload.middleware";
 export class VehicleController {
   private readonly vehicleService = new VehicleService();
 
@@ -95,6 +96,27 @@ export class VehicleController {
       res.status(200).json({
         success: true,
         message: "Vehicle deleted successfully",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async uploadImage(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const vehicle = await this.vehicleService.uploadImage(
+        req.params.id,
+        req.user!,
+        req.file!,
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Vehicle image uploaded successfully",
+        data: new VehicleResponse(vehicle),
       });
     } catch (error) {
       next(error);

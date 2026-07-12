@@ -9,6 +9,7 @@ import { User } from "../../../entities/User.entity";
 import { NotFoundError } from "../../../utils/errors/NotFoundError";
 import { ForbiddenError } from "../../../utils/errors/ForbiddenError";
 import { QueryVehicleDto } from "../dto/query-vehicle.dto";
+import { uploadToCloudinary } from "../../../utils/uploadToCloudinary";
 export class VehicleService {
   private readonly vehicleRepository = new VehicleRepository();
 
@@ -44,6 +45,33 @@ export class VehicleService {
     }
 
     const updatedVehicle = await this.vehicleRepository.update(id, data);
+
+    if (!updatedVehicle) {
+      throw new NotFoundError("Vehicle not found");
+    }
+
+    return updatedVehicle;
+  }
+  async uploadImage(
+    id: string,
+    owner: User,
+    file: Express.Multer.File,
+  ): Promise<Vehicle> {
+    const vehicle = await this.findById(id);
+
+    if (vehicle.owner.id !== owner.id) {
+      throw new ForbiddenError("You are not allowed to update this vehicle");
+    }
+
+    if (!file) {
+      throw new NotFoundError("No image uploaded");
+    }
+
+    const uploaded = await uploadToCloudinary(file.buffer);
+
+    const updatedVehicle = await this.vehicleRepository.update(id, {
+      image: uploaded.secure_url,
+    });
 
     if (!updatedVehicle) {
       throw new NotFoundError("Vehicle not found");
