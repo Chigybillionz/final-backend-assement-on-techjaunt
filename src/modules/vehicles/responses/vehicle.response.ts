@@ -18,6 +18,8 @@ export class VehicleResponse {
 
   pricePerDay: number;
 
+  image: string | null;
+
   owner: UserResponse;
 
   createdAt: Date;
@@ -33,6 +35,8 @@ export class VehicleResponse {
     this.transmission = vehicle.transmission;
     this.fuelType = vehicle.fuelType;
     this.pricePerDay = Number(vehicle.pricePerDay);
+
+    this.image = vehicle.image;
 
     this.owner = new UserResponse(vehicle.owner);
 
