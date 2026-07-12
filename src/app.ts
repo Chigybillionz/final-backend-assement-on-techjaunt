@@ -12,6 +12,8 @@ import bookingRoutes from "./modules/bookings/routes/booking.routes";
 import paymentRoutes from "./modules/payments/routes/payment.routes";
 import ownerRoutes from "./modules/owners/routes/owner.routes";
 import customerRoutes from "./modules/customers/routes/customer.routes";
+import reviewRoutes from "./modules/reviews/routes/review.routes";
+import favoriteRoutes from "./modules/favorites/routes/favorite.routes";
 const app = express();
 
 app.use(helmet());
@@ -53,6 +55,8 @@ app.use("/api/v1/bookings", bookingRoutes);
 app.use("/api/v1/payments", paymentRoutes);
 app.use("/api/v1/owners", ownerRoutes);
 app.use("/api/v1/customers", customerRoutes);
+app.use("/api/v1/reviews", reviewRoutes);
+app.use("/api/v1/favorites", favoriteRoutes);
 
 // Global Error Handler (always last)
 app.use(errorHandler);

@@ -3,12 +3,18 @@ import { Entity, Column, OneToMany } from "typeorm";
 import { AppBaseEntity } from "./AppBaseEntity";
 import { Booking } from "./Booking.entity";
 import { UserRole } from "../enums/user-role.enum";
+import { Review } from "./Review.entity";
+import { Favorite } from "./Favorite.entity";
 
 @Entity("users")
 export class User extends AppBaseEntity {
   // Relationships
   @OneToMany(() => Booking, (booking) => booking.customer)
   bookings!: Booking[];
+  @OneToMany(() => Favorite, (favorite) => favorite.customer)
+  favorites?: Favorite[];
+  @OneToMany(() => Review, (review) => review.customer)
+  reviews?: Review[];
 
   @Column({
     length: 100,

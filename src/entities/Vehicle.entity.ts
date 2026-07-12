@@ -1,8 +1,9 @@
-import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 
 import { AppBaseEntity } from "./AppBaseEntity";
 import { User } from "./User.entity";
-
+import { Review } from "./Review.entity";
+import { Favorite } from "./Favorite.entity";
 @Entity("vehicles")
 export class Vehicle extends AppBaseEntity {
   @Column()
@@ -41,4 +42,8 @@ export class Vehicle extends AppBaseEntity {
     name: "ownerId",
   })
   owner!: User;
+  @OneToMany(() => Review, (review) => review.vehicle)
+  reviews?: Review[];
+  @OneToMany(() => Favorite, (favorite) => favorite.vehicle)
+  favorites?: Favorite[];
 }

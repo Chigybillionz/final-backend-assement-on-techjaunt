@@ -2,6 +2,7 @@ import { Between } from "typeorm";
 
 import { AppDataSource } from "../../../database/datasource";
 import { Booking } from "../../../entities/Booking.entity";
+import { PaymentStatus } from "../../../enums/payment-status.enum";
 
 export class BookingRepository {
   private readonly repository = AppDataSource.getRepository(Booking);
@@ -59,6 +60,29 @@ export class BookingRepository {
    */
   async delete(id: string): Promise<void> {
     await this.repository.delete(id);
+  }
+  /**
+   * Find completed booking for a customer and vehicle
+   */
+  async findCompletedBooking(
+    customerId: string,
+    vehicleId: string,
+  ): Promise<Booking | null> {
+    return this.repository.findOne({
+      where: {
+        customer: {
+          id: customerId,
+        },
+        vehicle: {
+          id: vehicleId,
+        },
+        paymentStatus: PaymentStatus.SUCCESS,
+      },
+      relations: {
+        customer: true,
+        vehicle: true,
+      },
+    });
   }
 
   /**
