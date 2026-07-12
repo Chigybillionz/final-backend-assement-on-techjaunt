@@ -10,7 +10,7 @@ import { errorHandler } from "./middlewares/error.middleware";
 import vehicleRoutes from "./modules/vehicles/routes/vehicle.routes";
 import bookingRoutes from "./modules/bookings/routes/booking.routes";
 import paymentRoutes from "./modules/payments/routes/payment.routes";
-
+import ownerRoutes from "./modules/owners/routes/owner.routes";
 const app = express();
 
 app.use(helmet());
@@ -50,6 +50,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/vehicles", vehicleRoutes);
 app.use("/api/v1/bookings", bookingRoutes);
 app.use("/api/v1/payments", paymentRoutes);
+app.use("/api/v1/owners", ownerRoutes);
 
 // Global Error Handler (always last)
 app.use(errorHandler);
