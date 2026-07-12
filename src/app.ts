@@ -14,6 +14,7 @@ import ownerRoutes from "./modules/owners/routes/owner.routes";
 import customerRoutes from "./modules/customers/routes/customer.routes";
 import reviewRoutes from "./modules/reviews/routes/review.routes";
 import favoriteRoutes from "./modules/favorites/routes/favorite.routes";
+import adminRoutes from "./modules/admin/routes/admin.routes";
 const app = express();
 
 app.use(helmet());
@@ -57,6 +58,7 @@ app.use("/api/v1/owners", ownerRoutes);
 app.use("/api/v1/customers", customerRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/favorites", favoriteRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 // Global Error Handler (always last)
 app.use(errorHandler);
