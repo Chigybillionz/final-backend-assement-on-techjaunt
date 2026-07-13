@@ -67,8 +67,17 @@ router.get("/:id", vehicleController.findById.bind(vehicleController));
  *           schema:
  *             type: object
  *     responses:
- *       201:
- *         description: Vehicle created successfully
+ *       200:
+  description: Vehicle created successfully
+  content:
+    application/json:
+      example:
+        success: true
+        message: Vehicle created successfully
+        data:
+          id: "123"
+          brand: "Toyota"
+          model: "Corolla"
  *       401:
  *         description: Unauthorized
  */

@@ -4,13 +4,16 @@ import { VehicleService } from "../services/vehicle.service";
 
 import { CreateVehicleDto } from "../dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "../dto/update-vehicle.dto";
+import { QueryVehicleDto } from "../dto/query-vehicle.dto";
 
 import { VehicleResponse } from "../responses/vehicle.response";
-import { QueryVehicleDto } from "../dto/query-vehicle.dto";
-import { upload } from "../../../middlewares/upload.middleware";
+
 export class VehicleController {
   private readonly vehicleService = new VehicleService();
 
+  /**
+   * Create Vehicle
+   */
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const vehicle = await this.vehicleService.create(
@@ -28,6 +31,9 @@ export class VehicleController {
     }
   }
 
+  /**
+   * Get All Vehicles (Pagination + Filtering + Sorting)
+   */
   async findAll(
     req: Request,
     res: Response,
@@ -42,18 +48,17 @@ export class VehicleController {
         success: true,
         data: {
           items: result.items.map((vehicle) => new VehicleResponse(vehicle)),
-          pagination: {
-            page: result.page,
-            limit: result.limit,
-            total: result.total,
-            totalPages: result.totalPages,
-          },
+          pagination: result.pagination,
         },
       });
     } catch (error) {
       next(error);
     }
   }
+
+  /**
+   * Get Vehicle By ID
+   */
   async findById(
     req: Request,
     res: Response,
@@ -71,6 +76,9 @@ export class VehicleController {
     }
   }
 
+  /**
+   * Update Vehicle
+   */
   async update(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const vehicle = await this.vehicleService.update(
@@ -89,18 +97,9 @@ export class VehicleController {
     }
   }
 
-  async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      await this.vehicleService.delete(req.params.id, req.user!);
-
-      res.status(200).json({
-        success: true,
-        message: "Vehicle deleted successfully",
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
+  /**
+   * Upload Vehicle Image
+   */
   async uploadImage(
     req: Request,
     res: Response,
@@ -117,6 +116,22 @@ export class VehicleController {
         success: true,
         message: "Vehicle image uploaded successfully",
         data: new VehicleResponse(vehicle),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Delete Vehicle
+   */
+  async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      await this.vehicleService.delete(req.params.id, req.user!);
+
+      res.status(200).json({
+        success: true,
+        message: "Vehicle deleted successfully",
       });
     } catch (error) {
       next(error);
