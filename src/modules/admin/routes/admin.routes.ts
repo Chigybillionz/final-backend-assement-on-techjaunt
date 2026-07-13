@@ -11,6 +11,24 @@ const router = Router();
 
 const adminController = new AdminController();
 
+/**
+ * @openapi
+ * /admin/dashboard:
+ *   get:
+ *     tags:
+ *       - Admin Dashboard
+ *     summary: Get admin dashboard
+ *     description: Returns overall platform statistics including users, vehicles, bookings, payments, reviews, favorites, and revenue.
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Admin dashboard retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ */
 router.get(
   "/dashboard",
   authenticate,

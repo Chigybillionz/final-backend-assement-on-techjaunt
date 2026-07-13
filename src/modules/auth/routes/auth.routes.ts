@@ -35,13 +35,13 @@ const authController = new AuthController();
  *             properties:
  *               firstName:
  *                 type: string
- *                 example: John
+ *                 example: Okorie
  *               lastName:
  *                 type: string
- *                 example: Doe
+ *                 example: Chigozie
  *               email:
  *                 type: string
- *                 example: john@example.com
+ *                 example: okoriechigozie99@gmail.com
  *               password:
  *                 type: string
  *                 example: Password123!
@@ -80,7 +80,7 @@ router.post(
  *             properties:
  *               email:
  *                 type: string
- *                 example: john@example.com
+ *                 example: okoriechigozie99@gmail.com
  *               password:
  *                 type: string
  *                 example: Password123!
