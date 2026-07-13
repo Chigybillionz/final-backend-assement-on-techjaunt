@@ -9,6 +9,7 @@ import { User } from "../../../entities/User.entity";
 import { NotFoundError } from "../../../utils/errors/NotFoundError";
 import { ForbiddenError } from "../../../utils/errors/ForbiddenError";
 import { ConflictError } from "../../../utils/errors/ConflictError";
+
 import { BookingStatus } from "../../../enums/booking-status.enum";
 import { PaymentStatus } from "../../../enums/payment-status.enum";
 
@@ -17,6 +18,9 @@ export class BookingService {
 
   private readonly vehicleRepository = new VehicleRepository();
 
+  /**
+   * Create Booking
+   */
   async create(customer: User, data: CreateBookingDto): Promise<Booking> {
     // Check if the vehicle exists
     const vehicle = await this.vehicleRepository.findById(data.vehicleId);
@@ -62,7 +66,7 @@ export class BookingService {
     const totalPrice = Number(vehicle.pricePerDay) * rentalDays;
 
     // Create booking
-    const booking = await this.bookingRepository.create({
+    return this.bookingRepository.create({
       customer,
       vehicle,
       pickupDate,
@@ -71,13 +75,18 @@ export class BookingService {
       status: BookingStatus.PENDING,
       paymentStatus: PaymentStatus.PENDING,
     });
-    return booking;
   }
 
+  /**
+   * Get All Bookings
+   */
   async findAll(): Promise<Booking[]> {
     return this.bookingRepository.findAll();
   }
 
+  /**
+   * Get Booking By ID
+   */
   async findById(id: string): Promise<Booking> {
     const booking = await this.bookingRepository.findById(id);
 
@@ -86,5 +95,83 @@ export class BookingService {
     }
 
     return booking;
+  }
+
+  /**
+   * Confirm Booking
+   */
+  async confirmBooking(id: string, owner: User): Promise<Booking> {
+    const booking = await this.bookingRepository.findByIdWithRelations(id);
+
+    if (!booking) {
+      throw new NotFoundError("Booking not found");
+    }
+
+    if (booking.vehicle.owner.id !== owner.id) {
+      throw new ForbiddenError("You are not allowed to confirm this booking");
+    }
+
+    if (booking.status !== BookingStatus.PENDING) {
+      throw new ConflictError("Only pending bookings can be confirmed");
+    }
+
+    const updatedBooking = await this.bookingRepository.updateStatus(
+      id,
+      BookingStatus.CONFIRMED,
+    );
+
+    return updatedBooking!;
+  }
+
+  /**
+   * Cancel Booking
+   */
+  async cancelBooking(id: string, owner: User): Promise<Booking> {
+    const booking = await this.bookingRepository.findByIdWithRelations(id);
+
+    if (!booking) {
+      throw new NotFoundError("Booking not found");
+    }
+
+    if (booking.vehicle.owner.id !== owner.id) {
+      throw new ForbiddenError("You are not allowed to cancel this booking");
+    }
+
+    if (booking.status !== BookingStatus.PENDING) {
+      throw new ConflictError("Only pending bookings can be cancelled");
+    }
+
+    const updatedBooking = await this.bookingRepository.updateStatus(
+      id,
+      BookingStatus.CANCELLED,
+    );
+
+    return updatedBooking!;
+  }
+
+  /**
+   * Complete Booking
+   */
+  async completeBooking(id: string, owner: User): Promise<Booking> {
+    const booking = await this.bookingRepository.findByIdWithRelations(id);
+
+    if (!booking) {
+      throw new NotFoundError("Booking not found");
+    }
+
+    if (booking.vehicle.owner.id !== owner.id) {
+      throw new ForbiddenError("You are not allowed to complete this booking");
+    }
+
+    if (booking.status !== BookingStatus.CONFIRMED) {
+      throw new ConflictError("Only confirmed bookings can be completed");
+    }
+
+    const updatedBooking = await this.bookingRepository.updateStatus(
+      id,
+      BookingStatus.COMPLETED,
+    );
+
+    return updatedBooking!;
   }
 }

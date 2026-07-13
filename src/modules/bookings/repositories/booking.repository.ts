@@ -3,6 +3,7 @@ import { Between } from "typeorm";
 import { AppDataSource } from "../../../database/datasource";
 import { Booking } from "../../../entities/Booking.entity";
 import { PaymentStatus } from "../../../enums/payment-status.enum";
+import { BookingStatus } from "../../../enums/booking-status.enum";
 
 export class BookingRepository {
   private readonly repository = AppDataSource.getRepository(Booking);
@@ -104,5 +105,36 @@ export class BookingRepository {
         vehicle: true,
       },
     });
+  }
+  /**
+   * Find booking with customer and vehicle owner
+   */
+  async findByIdWithRelations(id: string): Promise<Booking | null> {
+    return this.repository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        customer: true,
+        vehicle: {
+          owner: true,
+        },
+        payment: true,
+      },
+    });
+  }
+
+  /**
+   * Update booking status
+   */
+  async updateStatus(
+    id: string,
+    status: BookingStatus,
+  ): Promise<Booking | null> {
+    await this.repository.update(id, {
+      status,
+    });
+
+    return this.findByIdWithRelations(id);
   }
 }
