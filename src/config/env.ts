@@ -2,6 +2,19 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+/**
+ * Get required environment variable
+ */
+function getEnv(name: string): string {
+  const value = process.env[name];
+
+  if (!value) {
+    throw new Error(`❌ Missing required environment variable: ${name}`);
+  }
+
+  return value;
+}
+
 export const env = {
   // ==========================================
   // APPLICATION
@@ -18,11 +31,11 @@ export const env = {
   // JWT
   // ==========================================
   jwt: {
-    secret: process.env.JWT_SECRET || "",
+    secret: getEnv("JWT_SECRET"),
 
     expiresIn: process.env.JWT_EXPIRES_IN || "15m",
 
-    refreshSecret: process.env.JWT_REFRESH_SECRET || "",
+    refreshSecret: getEnv("JWT_REFRESH_SECRET"),
 
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
   },
@@ -31,15 +44,15 @@ export const env = {
   // DATABASE
   // ==========================================
   database: {
-    host: process.env.DATABASE_HOST || "localhost",
+    host: getEnv("DATABASE_HOST"),
 
     port: Number(process.env.DATABASE_PORT) || 5432,
 
-    username: process.env.DATABASE_USERNAME || "postgres",
+    username: getEnv("DATABASE_USERNAME"),
 
-    password: process.env.DATABASE_PASSWORD || "postgres",
+    password: getEnv("DATABASE_PASSWORD"),
 
-    database: process.env.DATABASE_NAME || "autolease",
+    database: getEnv("DATABASE_NAME"),
   },
 
   // ==========================================
@@ -67,9 +80,9 @@ export const env = {
   // ==========================================
   // PAYSTACK
   // ==========================================
-
   paystack: {
     secretKey: process.env.PAYSTACK_SECRET_KEY || "",
+
     baseUrl: process.env.PAYSTACK_BASE_URL || "https://api.paystack.co",
   },
 
