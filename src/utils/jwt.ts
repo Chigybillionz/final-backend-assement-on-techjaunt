@@ -27,3 +27,7 @@ export const generateRefreshToken = (payload: JwtPayload): string => {
     refreshTokenOptions,
   );
 };
+
+export const verifyRefreshToken = (token: string): JwtPayload => {
+  return jwt.verify(token, env.jwt.refreshSecret as Secret) as JwtPayload;
+};

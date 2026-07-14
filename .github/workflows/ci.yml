@@ -22,14 +22,22 @@ jobs:
         node-version: [22.x]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: ${{ matrix.node-version }}
 
-      - run: npm install
+      - name: Install Dependencies
+        run: npm install
 
-      - run: npm run build
+      - name: Build Project
+        run: npm run build
 
-      - run: echo "Tests will be added later."
+      - name: Check Formatting (Optional)
+        run: echo "Formatting check will be added later."
+
+      - name: Run Tests (Placeholder)
+        run: echo "Automated tests will be added in a future update."
