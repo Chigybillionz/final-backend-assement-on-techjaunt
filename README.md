@@ -223,9 +223,8 @@ The below is for the runing swager
 ![alt text](image.png)
 The below is for the runing api on postman
 
-![
-
-](image-3.png)The documentation includes:
+![alt text](image-4.png)
+The documentation includes:
 
 - Authentication
 - Vehicles
