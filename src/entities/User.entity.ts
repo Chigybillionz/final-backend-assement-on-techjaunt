@@ -8,11 +8,12 @@ import { Favorite } from "./Favorite.entity";
 
 @Entity("users")
 export class User extends AppBaseEntity {
-  // Relationships
   @OneToMany(() => Booking, (booking) => booking.customer)
   bookings!: Booking[];
+
   @OneToMany(() => Favorite, (favorite) => favorite.customer)
   favorites?: Favorite[];
+
   @OneToMany(() => Review, (review) => review.customer)
   reviews?: Review[];
 
@@ -77,25 +78,26 @@ export class User extends AppBaseEntity {
     nullable: true,
   })
   providerId?: string;
-
   @Column({
+    type: "text",
     nullable: true,
   })
-  refreshToken?: string;
+  refreshToken!: string | null;
 
   @Column({
+    type: "text",
     nullable: true,
   })
-  emailVerificationToken?: string;
+  emailVerificationToken!: string | null;
 
   @Column({
+    type: "text",
     nullable: true,
   })
-  passwordResetToken?: string;
-
+  passwordResetToken!: string | null;
   @Column({
     type: "timestamp",
     nullable: true,
   })
-  passwordResetExpires?: Date;
+  passwordResetExpires!: Date | null;
 }

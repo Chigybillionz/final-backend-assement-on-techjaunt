@@ -7,6 +7,7 @@ import { authenticate } from "../../../middlewares/auth.middleware";
 
 import { RegisterUserDto } from "../dto/register-user.dto";
 import { LoginUserDto } from "../dto/login-user.dto";
+import { RefreshTokenDto } from "../dto/refresh-token.dto";
 
 const router = Router();
 
@@ -26,33 +27,9 @@ const authController = new AuthController();
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - firstName
- *               - lastName
- *               - email
- *               - password
- *               - role
- *             properties:
- *               firstName:
- *                 type: string
- *                 example: Okorie
- *               lastName:
- *                 type: string
- *                 example: Chigozie
- *               email:
- *                 type: string
- *                 example: okoriechigozie99@gmail.com
- *               password:
- *                 type: string
- *                 example: Password123!
- *               role:
- *                 type: string
- *                 example: customer
  *     responses:
  *       201:
  *         description: User registered successfully
- *       400:
- *         description: Validation error
  */
 router.post(
   "/register",
@@ -74,26 +51,68 @@ router.post(
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - email
- *               - password
- *             properties:
- *               email:
- *                 type: string
- *                 example: okoriechigozie99@gmail.com
- *               password:
- *                 type: string
- *                 example: Password123!
  *     responses:
  *       200:
  *         description: Login successful
- *       401:
- *         description: Invalid credentials
  */
 router.post(
   "/login",
   validateDto(LoginUserDto),
   authController.login.bind(authController),
+);
+
+/**
+ * @openapi
+ * /auth/refresh:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     summary: Refresh access token
+ *     description: Generate a new access token using a valid refresh token.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *     responses:
+ *       200:
+ *         description: Token refreshed successfully
+ *       401:
+ *         description: Invalid refresh token
+ */
+router.post(
+  "/refresh",
+  validateDto(RefreshTokenDto),
+  authController.refresh.bind(authController),
+);
+
+/**
+ * @openapi
+ * /auth/logout:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     summary: Logout user
+ *     description: Revoke the current refresh token.
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ *       401:
+ *         description: Unauthorized
+ */
+router.post(
+  "/logout",
+  authenticate,
+  authController.logout.bind(authController),
 );
 
 /**

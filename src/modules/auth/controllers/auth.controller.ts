@@ -1,12 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 
 import { AuthService } from "../services/auth.service";
+
 import { RegisterUserDto } from "../dto/register-user.dto";
 import { LoginUserDto } from "../dto/login-user.dto";
+import { RefreshTokenDto } from "../dto/refresh-token.dto";
 
 export class AuthController {
   constructor(private readonly authService = new AuthService()) {}
 
+  /**
+   * Register User
+   */
   async register(
     req: Request,
     res: Response,
@@ -32,6 +37,9 @@ export class AuthController {
     }
   }
 
+  /**
+   * Login User
+   */
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await this.authService.login(req.body as LoginUserDto);
@@ -45,6 +53,49 @@ export class AuthController {
       next(error);
     }
   }
+
+  /**
+   * Refresh Access Token
+   */
+  async refresh(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const tokens = await this.authService.refresh(
+        req.body as RefreshTokenDto,
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Token refreshed successfully",
+        data: tokens,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Logout User
+   */
+  async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      await this.authService.logout(req.user!.id);
+
+      res.status(200).json({
+        success: true,
+        message: "Logout successful",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Current User
+   */
   async me(req: Request, res: Response): Promise<void> {
     res.status(200).json({
       success: true,
