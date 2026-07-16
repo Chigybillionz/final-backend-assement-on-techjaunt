@@ -17,6 +17,8 @@ import {
   verifyRefreshToken,
 } from "../../../utils/jwt";
 
+import { generateRandomToken, hashToken } from "../../../utils/tokens";
+
 export class AuthService {
   private readonly authRepository = new AuthRepository();
 
@@ -32,10 +34,29 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(data.password, 12);
 
+    // Generate email verification token
+    const verificationToken = generateRandomToken();
+
+    // Store only the hashed token
+    const hashedVerificationToken = hashToken(verificationToken);
+
     const user = await this.authRepository.create({
       ...data,
       password: hashedPassword,
+      emailVerificationToken: hashedVerificationToken,
+      isEmailVerified: false,
     });
+
+    /**
+     * TODO:
+     * Send verification email.
+     * For now we'll log the token until
+     * we integrate Nodemailer.
+     */
+    console.log("=================================");
+    console.log("EMAIL VERIFICATION TOKEN");
+    console.log(verificationToken);
+    console.log("=================================");
 
     return new UserResponse(user);
   }
@@ -69,7 +90,7 @@ export class AuthService {
     const accessToken = generateAccessToken(payload);
     const refreshToken = generateRefreshToken(payload);
 
-    // Hash the refresh token before storing it
+    // Hash refresh token before storing
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 12);
 
     user.refreshToken = hashedRefreshToken;
